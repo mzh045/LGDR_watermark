@@ -6,7 +6,7 @@ save_path='output\';
 load parameters m_num K data
 d=3; % The filter size of watermark estimation
 
-File=dir(fullfile(save_path,'*.bmp'));
+File=dir(fullfile(save_path,'*.png'));
 filename={File.name}';
 pic_num=length(filename);
 for p_num=1:pic_num
