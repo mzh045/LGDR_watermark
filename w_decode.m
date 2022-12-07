@@ -5,11 +5,16 @@ function [w_status,delta,w_data,w_s]=w_decode(w,w_size)
 % the decoded watermark data w_data, and the watermark unit w_s, which is
 % rotated/flipped to the original state
 load parameters K
-if size(K,1)>w_size
-    w_size=size(K,1);
+w_size0=size(K,1);
+w_size1=w_size;
+if w_size0 > w_size %  
+    w_size=w_size0;
     w=imresize(w,[w_size,w_size]);
 else
+    scale_Q=ceil(w_size/w_size0);
+    w_size=w_size0*scale_Q;
     K=imresize(K,[w_size,w_size]);
+    w=imresize(w,[w_size,w_size]);
 end
 M1=0;M2=0; % Scoring of the most likely state M1 and the next most likely state M2.
 for alpha=0:90:270 % For all possible state, including rotation ...
@@ -60,3 +65,4 @@ delta=(M1-M2)/M2; % Ratio of the two scores, considered as the confidence for th
 
 w_data=ones(size(raw_data));
 w_data(data_temp>0)=0;
+w_s=imresize(w_s,[w_size1,w_size1]);
