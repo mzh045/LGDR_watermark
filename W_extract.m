@@ -15,6 +15,7 @@ for p_num=1:pic_num
     pfname=pfname{1,1};
     
     Iw=im2double(imread(pfname));
+    Iw=imrotate(Iw,30);
     I2=rgb2ycbcr(Iw);
     Iy=I2(:,:,1);
     I=m_filter(Iy,[d,d]); % The estimated watermark I
@@ -30,8 +31,8 @@ for p_num=1:pic_num
     % If there is no geometric distortion or estimation failed, extract watermark directly
     try
         % Enhanced for rotation 
-        rot_step=15; % less than angle range of w_size_est, i.e., 16
-        prop_angles=[w_size_est(M),w_size_est(imrotate(M,15,'nearest')),w_size_est(imrotate(M,30,'nearest')),w_size_est(imrotate(M,45,'nearest'))];
+        rot_step=30; % less than angle range of w_size_est, i.e., 32
+        prop_angles=[w_size_est(M),w_size_est(imrotate(M,30,'nearest')),w_size_est(imrotate(M,60,'nearest'))];
         [w_size,idx]=min(prop_angles);
     catch
        w_size=round(size(K,1));

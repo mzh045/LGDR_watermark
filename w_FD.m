@@ -18,7 +18,7 @@ h_size=2*w_size;
 h=zeros(h_size);
 hf=floor(h_size/2)+1;
 % The circle filter, works well under rotation
-omega=0.1;%0.1
+omega=0.15;%0.1
 for i=1:h_size
     for j=1:h_size
         if (i-hf)^2+(j-hf)^2>w_size^2/2*(1-omega)&&(i-hf)^2+(j-hf)^2<w_size^2/2*(1+omega)
