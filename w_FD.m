@@ -76,28 +76,32 @@ else
         w_size=32;
     end
     w3=zeros(w_size);
-    XY=zeros(size(C(:,:,1)));
     be_Q=[];
+    XY=zeros(size(C(:,:,1)));
     error_num3=32;
     for i=1:size(C,3)
         temp=C(:,:,i);
-        if temp(1,2)<temp(2,2)
-            XY(1,:)=temp(1,:);
-            XY(4,:)=temp(2,:);
-        else
-            XY(1,:)=temp(2,:);
-            XY(4,:)=temp(1,:);
+        center=repmat(mean(temp,1),[4,1]);
+        vector=temp-center;
+        angles=zeros(4,1);
+        u=vector(1,:);
+        for vidx=2:4
+            v=vector(vidx,:);
+            c=cross([u,0],[v,0]);
+            if sign(c(3))==0
+                asign=1;
+            else
+                asign=sign(c(3));
+            end
+            angles(vidx)=acos(dot(v,u)/(norm(v)*norm(u)))*asign;
         end
-        if temp(3,2)<temp(4,2)
-            XY(2,:)=temp(3,:);
-            XY(3,:)=temp(4,:);
-        else
-            XY(2,:)=temp(4,:);
-            XY(3,:)=temp(3,:);
-        end
+        [~,idxs]=sort(angles);
+        XY(idxs,:)=temp;
         X=XY(:,1);Y=XY(:,2);
+        
         %X(1)=X(1)+1;X(4)=X(4)+1;Y(1)=Y(1)+1;Y(2)=Y(2)+1;
-        w1=Projective_trans(I,X,Y,w_size,w_size,0); % Projective transformation
+        w1=Projective_trans(I,X,Y,w_size*2,w_size*2,0); % Projective transformation
+        w1=imresize(w1(1:end,1:end),0.5);
         [~,delta,w_data,w_s]=w_decode(w1,w_size);
         error_num1=sum(sum(data~=w_data));%Number of error bits extracted by this watermark unit
         if delta>0.02  % Take the watermark unit whose delta greater than threshold into the extraction process

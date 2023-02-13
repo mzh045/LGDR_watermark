@@ -27,16 +27,16 @@ for alpha=0:90:270 % For all possible state, including rotation ...
                 w2=w2(:,end:-1:1);
             end
         end
-        w=w2.*K;
+        w_de=w2.*K;
         load parameters w0 m_num
         d=m_num;
         b_size=round(w_size/d); % The block size
         w0=imresize(w0,[b_size,b_size]);
-        w=imresize(w,[b_size*d,b_size*d]);
+        w_de=imresize(w_de,[b_size*d,b_size*d]);
         raw_data=zeros(d,d);
         for i=1:d
             for j=1:d
-                temp=w((i-1)*b_size+1:i*b_size,(j-1)*b_size+1:j*b_size);
+                temp=w_de((i-1)*b_size+1:i*b_size,(j-1)*b_size+1:j*b_size);
                 mju=mean2(temp);
                 sigma=std2(temp);
                 if sigma~=0

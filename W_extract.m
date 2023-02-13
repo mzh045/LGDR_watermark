@@ -29,9 +29,12 @@ for p_num=1:pic_num
     % Need kmeans() of Statistics and Machine Learning Toolbox in Matlab
     % If there is no geometric distortion or estimation failed, extract watermark directly
     try
-        w_size=w_size_est(M);
+        % Enhanced for rotation 
+        rot_step=15; % less than angle range of w_size_est, i.e., 16
+        prop_angles=[w_size_est(M),w_size_est(imrotate(M,15,'nearest')),w_size_est(imrotate(M,30,'nearest')),w_size_est(imrotate(M,45,'nearest'))];
+        [w_size,idx]=min(prop_angles);
     catch
-        w_size=round(size(K,1));
+       w_size=round(size(K,1));
     end
     % w_size=size(K,1);
     w_s=space_add_w(I,w_size);
@@ -39,6 +42,7 @@ for p_num=1:pic_num
     be=sum(sum(w_data~=data));
     % If geometric distortions exist, find the watermark unit in map M and decode them
     [be_Q,com,w_data]=w_FD(I,M,w_size);
+    %[be_Q,com,w_data]=w_FD(imresize(I,2),If,w_size*2);
     if w_data==-1
         disp('Detection failure!')
     else
