@@ -4,7 +4,7 @@ close all
 
 save_path='output\';
 load parameters m_num K data
-d=3; % The filter size of watermark estimation
+d=5; % The filter size of watermark estimation
 
 File=dir(fullfile(save_path,'*.png'));
 filename={File.name}';
@@ -20,17 +20,20 @@ for p_num=1:pic_num
     I=m_filter(Iy,[d,d]); % The estimated watermark I
     
     S=ac_function(I,'conv');% The symmetry matrix S of I
-    beta=4.0; % Threshold to filter the symmetrical peaks map
+    beta=3.7; % Threshold to filter the symmetrical peaks map
     If=peaks_fl(S,100,40,40,beta);
     M=scale_peak(If,2);% The watermark unit map
     figure,imshow(M)
     
     % If the watermarked image is scaled, w_size need to be estimated first.
     % Need kmeans() of Statistics and Machine Learning Toolbox in Matlab
-    % w_size=w_size_est(M);
-    % else:
-    w_size=size(K,1);
-    % If there is no geometric distortion, extract watermark directly
+    % If there is no geometric distortion or estimation failed, extract watermark directly
+    try
+        w_size=w_size_est(M);
+    catch
+        w_size=round(size(K,1));
+    end
+    % w_size=size(K,1);
     w_s=space_add_w(I,w_size);
     [~,~,w_data,~]=w_decode(w_s,w_size);
     be=sum(sum(w_data~=data));
