@@ -15,7 +15,6 @@ for p_num=1:pic_num
     pfname=pfname{1,1};
     
     Iw=im2double(imread(pfname));
-    Iw=imrotate(Iw,30);
     I2=rgb2ycbcr(Iw);
     Iy=I2(:,:,1);
     I=m_filter(Iy,[d,d]); % The estimated watermark I
