@@ -20,6 +20,8 @@ v=[x(1);y(1);x(2);y(2);x(3);y(3);x(4);y(4)];
 u=A\v;
 U=reshape([u;1],3,3)';
 % test yangxi
+test = 0;
+test = test*100;
 tform=projective2d(U');
 
 R=imref2d([m,n]);%,[1,512]-32,[1,512]-64);
