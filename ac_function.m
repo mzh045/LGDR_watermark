@@ -25,3 +25,5 @@ else
 end
 
 acf=A;
+
+% ACF_none = acf/2;
